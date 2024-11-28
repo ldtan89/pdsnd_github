@@ -4,7 +4,7 @@
 November 27, 2024
 
 ### Project Title
-US Bikeshare Data Analysis Project
+US Bikeshare Data Analysis Project.
 
 ### Description
 This project analyzes bike share data from three major US cities (Chicago, New York City, and Washington) to understand usage patterns. The interactive Python program allows users to filter and explore bike share statistics by city, month, and day of the week.
