@@ -26,5 +26,8 @@ This project analyzes bike share data from three major US cities (Chicago, New Y
     * Birth Year (only available for NYC and Chicago)
 
 ### Credits
-It's important to give proper credit. Add links to any repo that inspired you or blogposts you consulted.
+    * Data provided by [Motivate](https://www.lyft.com/bikes), the company that operates the bike share systems in these cities
+    * Project structure inspired by Udacity's Programming for Data Science Nanodegree program
+    * Pandas documentation for data analysis techniques: https://pandas.pydata.org/docs/
+    * Python datetime documentation for time calculations: https://docs.python.org/3/library/datetime.html
 
