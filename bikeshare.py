@@ -95,39 +95,67 @@ def load_data(city, month, day):
 
 def time_stats(df):
     """Displays statistics on the most frequent times of travel."""
-
     print('\nCalculating The Most Frequent Times of Travel...\n')
     start_time = time.time()
 
-    # display the most common month
+    # Convert Start Time column to datetime if not already
+    df['Start Time'] = pd.to_datetime(df['Start Time'])
 
+    # Extract month, day of week and hour from Start Time
+    df['month'] = df['Start Time'].dt.month
+    df['day_of_week'] = df['Start Time'].dt.day_name()
+    df['hour'] = df['Start Time'].dt.hour
 
-    # display the most common day of week
+    # Most common month
+    popular_month = df['month'].mode()[0]
+    months = ['january', 'february', 'march', 'april', 'may', 'june']
+    print(f'Most Common Month: {months[popular_month-1].title()}')
 
+    # Most common day of week
+    popular_day = df['day_of_week'].mode()[0]
+    print(f'Most Common Day of Week: {popular_day}')
 
-    # display the most common start hour
+    # Most common hour
+    popular_hour = df['hour'].mode()[0]
+    print(f'Most Common Start Hour: {popular_hour}')
 
-
-    print("\nThis took %s seconds." % (time.time() - start_time))
+    print(f"\nThis took {(time.time() - start_time):.4f} seconds.")
     print('-'*40)
 
-
 def station_stats(df):
-    """Displays statistics on the most popular stations and trip."""
-
+    """
+    Displays statistics on the most popular stations and trip.
+    Uses groupby() and nlargest() for finding most common trip.
+    """
     print('\nCalculating The Most Popular Stations and Trip...\n')
     start_time = time.time()
 
-    # display most commonly used start station
+    # Most common start station
+    popular_start = df['Start Station'].mode()[0]
+    print(f'Most common start station: {popular_start}')
 
+    # Most common end station
+    popular_end = df['End Station'].mode()[0]
+    print(f'Most common end station: {popular_end}')
 
-    # display most commonly used end station
+    # Most common trip using groupby and nlargest
+    # 1. Group by both stations
+    # 2. Count occurrences
+    # 3. Reset index to make a DataFrame
+    # 4. Use nlargest to get most frequent
+    trip_counts = (df.groupby(['Start Station', 'End Station'])
+                    .size()
+                    .reset_index(name='count')
+                    .nlargest(1, 'count'))
+    
+    # Get the most common trip from the result
+    start = trip_counts.iloc[0]['Start Station']
+    end = trip_counts.iloc[0]['End Station']
+    count = trip_counts.iloc[0]['count']
+    
+    print(f'Most common trip: {start} -> {end}')
 
-
-    # display most frequent combination of start station and end station trip
-
-
-    print("\nThis took %s seconds." % (time.time() - start_time))
+    print(f"\nThis took {(time.time() - start_time):.4f} seconds.")
     print('-'*40)
 
 
