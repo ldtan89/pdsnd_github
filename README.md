@@ -10,6 +10,7 @@ US Bikeshare Data Analysis Project.
 This project analyzes bike share data from three major US cities (Chicago, New York City, and Washington) to understand usage patterns. The interactive Python program allows users to filter and explore bike share statistics by city, month, and day of the week.
 
 ### Files used
+
     * bikeshare.py - The main Python script
     * chicago.csv - Bikeshare data for Chicago
     * new_york_city.csv - Bikeshare data for NYC
