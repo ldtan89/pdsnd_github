@@ -161,53 +161,108 @@ def station_stats(df):
 
 def trip_duration_stats(df):
     """Displays statistics on the total and average trip duration."""
-
-    print('\nCalculating Trip Duration...\n')
+    print('\nCalculating Trip Duration Stats...')
     start_time = time.time()
 
-    # display total travel time
+    total_duration = df['Trip Duration'].sum()
+    avg_duration = df['Trip Duration'].mean()
 
+    print(f'\nTotal travel time: {total_duration:,.2f} seconds')
+    print(f'Mean travel time: {avg_duration:.2f} seconds')
 
-    # display mean travel time
-
-
-    print("\nThis took %s seconds." % (time.time() - start_time))
-    print('-'*40)
-
+    print(f'\nThis took {time.time() - start_time:.4f} seconds.')
 
 def user_stats(df):
     """Displays statistics on bikeshare users."""
-
     print('\nCalculating User Stats...\n')
     start_time = time.time()
 
     # Display counts of user types
-
+    user_types = df['User Type'].value_counts()
+    print('User Types:')
+    for user_type, count in user_types.items():
+        print(f'{user_type}: {count}')
 
     # Display counts of gender
+    if 'Gender' in df.columns:
+        gender_counts = df['Gender'].value_counts()
+        print('\nGender Counts:')
+        for gender, count in gender_counts.items():
+            print(f'{gender}: {count}')
+    else:
+        print('\nGender data not available for this city.')
 
+    # Display birth year stats
+    if 'Birth Year' in df.columns:
+        earliest = int(df['Birth Year'].min())
+        most_recent = int(df['Birth Year'].max())
+        most_common = int(df['Birth Year'].mode()[0])
+        print(f'\nEarliest Birth Year: {earliest}')
+        print(f'Most Recent Birth Year: {most_recent}')
+        print(f'Most Common Birth Year: {most_common}')
+    else:
+        print('\nBirth year data not available for this city.')
 
-    # Display earliest, most recent, and most common year of birth
-
-
-    print("\nThis took %s seconds." % (time.time() - start_time))
+    print(f"\nThis took {(time.time() - start_time):.4f} seconds.")
     print('-'*40)
 
+def display_raw_data(df):
+    """
+    Displays raw data upon request by the user.
+    Displays 5 rows at a time and continues based on user input.
+    """
+    row = 0
+    while True:
+        view_data = input('\nWould you like to view 5 rows of raw data? Enter \'yes\' or \'no\': \n').lower()
+        if view_data != 'yes':
+            break
+            
+        # Get current chunk of data
+        data_chunk = df.iloc[row:row + 5]
+        
+        # Display headers only for first chunk
+        header = f"{' ':>8} {'Start Time':<24} {'End Time':<24} {'Trip Duration':<14} {'Start Station':<35} {'End Station':<35} {'User Type':<12} {'Gender':<8} {'Birth Year':<8}"
+        print(header)
+        
+        # Display each row
+        for _, data in data_chunk.iterrows():
+            # Get the ID from first column value
+            id_num = str(data.iloc[0])
+            
+            # Format each field
+            start_time = str(data['Start Time'])
+            end_time = str(data['End Time'])
+            trip_duration = str(data['Trip Duration'])
+            start_station = str(data['Start Station'])
+            end_station = str(data['End Station'])
+            user_type = str(data['User Type'])
+            gender = str(data['Gender']) if 'Gender' in data else ''
+            birth_year = str(data['Birth Year']) if 'Birth Year' in data else ''
+            
+            print(f"{id_num:>8} {start_time:<24}{end_time:<24}{trip_duration:<14}{start_station:<35}{end_station:<35}{user_type:<12}{gender:<8}{birth_year:<8}")
+        
+        row += 5
+        if row >= len(df):
+            print("\nNo more data to display!")
+            break
 
 def main():
     while True:
+        # Get all three values from get_filters()
         city, month, day = get_filters()
+        
+        # Pass all three values to load_data()
         df = load_data(city, month, day)
-
+        
         time_stats(df)
         station_stats(df)
         trip_duration_stats(df)
         user_stats(df)
+        display_raw_data(df)
 
-        restart = input('\nWould you like to restart? Enter yes or no.\n')
+        restart = input('\nWould you like to restart? Enter \'yes\' or \'no\'.\n')
         if restart.lower() != 'yes':
             break
 
-
 if __name__ == "__main__":
-	main()
+    main()
